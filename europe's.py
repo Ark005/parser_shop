@@ -1,17 +1,19 @@
 import xlwt
 from bs4 import BeautifulSoup
 import requests
-url = 'https://metropolis.moscow/shops/'
+
+url = 'https://europe-tc.ru/shops/'
+
 
 def make_request():
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "lxml")
-    shop_card = soup.find_all('shop-card title', {'class': 'shop-card shop'})
+    shop_card = soup.find_all('div', {'class': 'uk-card-body'})
     parsed_shop_cards = []
     for card in shop_card:
-        title = card.find('div', {'class': 'shop-card shop'}).text
-        category = card.find('p', {'class': 'shop-card__descr'}).text
-        stage = card.find('p', {'class': 'shop_card__floor'}).find('a', {'class': 'link-show-map'}).find('span').text
+        title = card.find('a', {'class': 'uk-card-title'}).text
+        #category = card.find('div', {'class': 'shop_card__category'}).text
+        #stage = card.find('div', {'class': 'shop_card__bottom'}).find('a', {'class': 'link-show-map'}).find('span').text
         #stage = stage.replace('На схеме','').strip()
         #parsed_card = {'title': title, 'category': category, 'stage': stage}
         parsed_card = {'title': title}
@@ -34,7 +36,7 @@ def save_result(results):
         #row.write(2, card['stage'])
 
     # Save the result
-    book.save("metropolis.xls")
+    book.save("europe-tc.xls")
 
 
 result = make_request()
